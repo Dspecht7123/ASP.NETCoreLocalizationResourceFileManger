@@ -1,0 +1,5 @@
+- investigate why resx-files with additional region code don't work
+- add button for adding new key (with input file to ensure that a key is entered)
+- prepare readme file for go-live
+- add error-handling
+- 

@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "resxhelper.helloWorld",
-        "title": "Hello World"
+        "command": "resxhelper.resxhelper",
+        "title": "Resx Helper"
       }
     ]
   },
