@@ -3,6 +3,8 @@
 With ResXHelper you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
 This is a student project.
 
+![ResxHelper](/ResxHelperScreenshot.png)
+
 ## Features
 
 To open the ResXHelper extension press `Strg+Shift+P` and enter `ResXHelper`.
@@ -11,6 +13,8 @@ ResXHelper searches for all files with the ending `.resx` and combines them into
 For example, the files `Create.de.resx` and `Create.en.resx` would be combined. You would see it in the "Available Paths" select under the path `pathToYourRepository/Create`.
 
 When you select a path, a table with all the keys and corresponding translations is shown. When the Save-Button is pressed, the current data is saved to the corresponding .resx-files.
+
+If you want to add a new key, enter the key-value in the input-field under the table and press the Add-Button. The new key will be added at the top of the table.
 
 ## Known Issues
 
