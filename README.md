@@ -3,7 +3,7 @@
 With ResXHelper you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
 This is a student project.
 
-![ResxHelper](/ResxHelperScreenshot.png)
+![ResxHelper](https://github.com/Dspecht7123/ResXHelper/blob/main/ResxHelperScreenshot.png)
 
 ## Features
 

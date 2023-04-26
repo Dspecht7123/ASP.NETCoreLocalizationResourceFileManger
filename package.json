@@ -1,4 +1,5 @@
 {
+  "publisher": "woodpecker",
   "name": "resxhelper",
   "displayName": "ResXHelper",
   "description": "",
@@ -22,7 +23,7 @@
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "node ./esbuild.js",
-    "package": "NODE_ENV=production node ./esbuild.js",
+    "package": "SET NODE_ENV=production & node ./esbuild.js",
     "watch": "node ./esbuild.js --watch",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
