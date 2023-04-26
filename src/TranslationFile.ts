@@ -1,14 +1,12 @@
 import { Uri } from "vscode";
-import { translation, ITranslationFile, resxJson } from "./types";
-
-
+import { ITranslation, ITranslationFile, resxJson } from "./types";
 
 export class TranslationFile implements ITranslationFile {
     public path: Uri
     public fullName: string
     public name: string
     public languageCodes: string[] = []
-    public translations: translation[]
+    public translations: ITranslation[]
     public checked: boolean = false;
 
     constructor(path: Uri, name: string, content: resxJson[]) {
@@ -23,14 +21,15 @@ export class TranslationFile implements ITranslationFile {
         return fileName.substring(fileName.indexOf(".") + 1, fileName.indexOf(".", fileName.indexOf(".") + 1))
     }
 
-    private getTranslationsObject(object: resxJson[], language: string): translation[] {
+    private getTranslationsObject(object: any[], language: string): ITranslation[] {
         let translations: any[] = [];
-        for (var key in object) {
-            let translation: translation = {
+        for (const [key, value] of Object.entries(object)) {
+            let translation: ITranslation = {
                 "key": key,
+                "added": false,
                 "specificTranslations": [{
                     "language": language,
-                    "value": object[key]
+                    "value": value
                 }]
             };
             translations.push(translation);
@@ -39,10 +38,22 @@ export class TranslationFile implements ITranslationFile {
     }
 
     public addTranslations(x:ITranslationFile){
-        for (const index1 in this.translations) {
-            for (const index2 in x.translations) {
-                if (this.translations[index1].key === x.translations[index2].key) {
-                    this.translations[index1].specificTranslations.push(x.translations[index2].specificTranslations[0]);
+        if(this.translations.length == 0)
+        {
+            this.translations = x.translations;
+        }else{
+            let translationAdded = false;
+            for (const index1 in this.translations) {
+                for (const index2 in x.translations) {
+                    if (this.translations[index1].key === x.translations[index2].key) {
+                        this.translations[index1].specificTranslations.push(x.translations[index2].specificTranslations[0]);
+                        x.translations[index2].added = true;
+                    }
+                }
+            }
+            for(const index2 in x.translations){
+                if(x.translations[index2].added === false){
+                    this.translations.push(x.translations[index2]);
                 }
             }
         }

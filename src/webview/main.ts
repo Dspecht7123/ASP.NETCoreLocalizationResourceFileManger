@@ -1,8 +1,9 @@
 // file: src/webview/main.ts
 
-import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, Dropdown, vsCodeOption, Option } from "@vscode/webview-ui-toolkit";
+import { provideVSCodeDesignSystem, vsCodeButton, Button, vsCodeDropdown, Dropdown, vsCodeOption, Option, vsCodeTextField, TextField } from "@vscode/webview-ui-toolkit";
+import { ISpecificTranslation, ITranslation } from "../types";
 
-provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption());
+provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption(), vsCodeTextField());
 
 window.addEventListener("load", main);
 
@@ -33,6 +34,7 @@ function main() {
         receivedData = message;
         addPathsToSelect(message);
         buildTranslationsTable(message);
+        return;
     }
   });
 
@@ -52,6 +54,9 @@ function main() {
     let new_thead = document.createElement('thead');
     let new_tr = document.createElement('tr');
     let new_th = document.createElement('th');
+    new_tr.appendChild(new_th);
+    new_thead.appendChild(new_tr);
+    new_th = document.createElement('th');
     new_th.innerHTML = 'Key';
     new_tr.appendChild(new_th);
     new_thead.appendChild(new_tr);
@@ -63,16 +68,16 @@ function main() {
   function addPathsToSelect(message: any) {
     removeSelectOptions(select);
     let firstOption = true;
-    let option = new Option("please select a path...","");
+    let option = new Option("please select a path...", "");
     select.appendChild(option);
     for (let translationFile of message.message) {
       console.log(translationFile.path.fsPath + "/" + translationFile.name);
       let text = translationFile.path.fsPath + "/" + translationFile.name;
       let value = translationFile.path.fsPath + "/" + translationFile.name;
       let option: Option;
-      if(firstOption){
+      if (firstOption) {
         option = new Option(text, value, true);
-      }else{
+      } else {
         option = new Option(text, value);
       }
       select.appendChild(option);
@@ -104,7 +109,6 @@ function main() {
         thead.append(emptyThElement);
       }
     }
-
   }
 
   function addRowsToTable(message: any) {
@@ -115,20 +119,25 @@ function main() {
         let translation = message.message[translationFileIndex].translations[index];
         let tbody = table.getElementsByTagName('tbody')[0];
         let row = tbody.insertRow(0);
+        let newCell = row.insertCell(0);
+        let button = createRemoveButtonElement(translation);
+        newCell.appendChild(button);
         let input = createKeyInputElement(translation);
         input.value = translation.key;
-        row.insertCell(0).appendChild(input);
-        let columnCounter = 1;
+        newCell = row.insertCell(1);
+        newCell.appendChild(input);
+        let columnCounter = 2;
         for (let i = 0; i < numberOfLanguages; i++) {
-          let specificTranslation = translation.specificTranslations[i];
+          let indexOfSpecificTranslation = translation.specificTranslations.map(function (e: { language: any; }) { return e.language; }).indexOf((languageCodes[i]));
+          let specificTranslation = translation.specificTranslations[indexOfSpecificTranslation];
           if (specificTranslation === undefined) {
             row.insertCell(columnCounter).innerHTML = languageCodes[i];
-            translation.specificTranslations.push({
+            let newLength = translation.specificTranslations.push({
               "language": languageCodes[i],
               "value": ""
             }
             );
-            let input = createInputElement(translation.specificTranslations[i]);
+            let input = createInputElement(translation.specificTranslations[newLength - 1]);
             row.insertCell(columnCounter + 1).appendChild(input);
           } else {
             row.insertCell(columnCounter).innerHTML = specificTranslation.language;
@@ -145,7 +154,7 @@ function main() {
   }
 
   function createKeyInputElement(specificTranslation: any) {
-    let input = document.createElement("input");
+    let input = document.createElement('input');
     input.addEventListener('input', function (e: any) {
       specificTranslation.key = e.target.value;
     }.bind(specificTranslation), true);
@@ -153,11 +162,33 @@ function main() {
   }
 
   function createInputElement(specificTranslation: any) {
-    let input = document.createElement("input");
+    let input = document.createElement('input');
     input.addEventListener('input', function (e: any) {
       specificTranslation.value = e.target.value;
     }.bind(specificTranslation), true);
     return input;
+  }
+
+  function createRemoveButtonElement(boundTranslation: any) {
+    let button = document.createElement('vscode-button') as Button;
+    button.appearance = 'icon'; 
+    let span = document.createElement('span');
+    span.className = "codicon codicon-close";
+    button.appendChild(span);
+    button.addEventListener('click', function (e: any) {
+      let translationFileIndex = getTranslationFileIndex(receivedData);
+      if (translationFileIndex !== undefined) {
+        let translations = receivedData.message[translationFileIndex].translations
+        for (let i = 0; i < translations.length; i++) {
+          if (translations[i].key === boundTranslation.key) {
+            translations.splice(i, 1);
+            break;
+          }
+        }
+        buildTranslationsTable(receivedData);
+      }
+    }.bind(boundTranslation), true);
+    return button;
   }
 
   function getTranslationFileIndex(message: any) {
@@ -183,10 +214,48 @@ function main() {
         command: 'update',
         json: JSON.stringify(translationFile)
       });
-      vscode.postMessage({
-        command: "hello",
-        text: "Saved",
-      });
+    }
+  }
+
+  const addKeyButton = document.getElementById("addKeyButton");
+  if (addKeyButton !== null) {
+    addKeyButton.addEventListener("click", () => { addKey() });
+  }
+
+  function addKey() {
+    let keyInputField = document.getElementById("keyInputField") as HTMLInputElement;
+    if (keyInputField !== null) {
+      let newKey = keyInputField.value;
+      if (newKey === "") {
+        vscode.postMessage({
+          command: 'message',
+          text: 'please enter a key'
+        })
+      } else {
+        addTableRow(newKey);
+        keyInputField.value = "";
+      }
+    }
+  }
+
+  function addTableRow(key: string) {
+    let index = getTranslationFileIndex(receivedData)
+    if (index !== undefined) {
+      let translation = receivedData.message[index].translations[0];
+      let translationCopy: ITranslation = {
+        added: false,
+        key: key,
+        specificTranslations: []
+      };
+      for (let specificTranslation of translation.specificTranslations) {
+        let specificTranslationCopy: ISpecificTranslation = {
+          "language": specificTranslation.language,
+          "value": ""
+        };
+        translationCopy.specificTranslations.push(specificTranslationCopy);
+      }
+      receivedData.message[index].translations.push(translationCopy);
+      buildTranslationsTable(receivedData);
     }
   }
 }

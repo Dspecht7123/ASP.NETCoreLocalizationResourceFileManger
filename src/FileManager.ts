@@ -34,12 +34,17 @@ export class FileManager {
                     await this.walkFiles(vscode.Uri.file(dir.fsPath + '/' + x[0]), index + 1);
                 } else {
                     if (RegExp('^.*\.(resx)$').exec(x[0])) {
-                        let readFilePromise = vscode.workspace.fs.readFile(vscode.Uri.file(dir.fsPath + '/' + x[0]));
-                        let fileUint8Array = await readFilePromise;
-                        let resx2jsPromise = await resx.resx2js(fileUint8Array.toString());
-                        let content = await resx2jsPromise;
-                        let translationFile = new TranslationFile(dir, x[0], content);
-                        this.resxFiles.push(translationFile);
+                        try {
+                            let readFilePromise = vscode.workspace.fs.readFile(vscode.Uri.file(dir.fsPath + '/' + x[0]));
+                            let fileUint8Array = await readFilePromise;
+                            let resx2jsPromise = await resx.resx2js(fileUint8Array.toString());
+                            let content = await resx2jsPromise;
+                            let translationFile = new TranslationFile(dir, x[0], content);
+                            this.resxFiles.push(translationFile);
+                        } catch (e: any) {
+                            vscode.window.showErrorMessage(e.message);
+                        }
+
                     }
                 }
             }
@@ -52,7 +57,6 @@ export class FileManager {
 
     private combineFiles() {
         this.combinedFiles = [];
-        let localResxFiles: ITranslationFile[] = Object.assign([], this.resxFiles);
         for (const x of this.resxFiles) {
             for (const y of this.resxFiles) {
                 if (y !== x && x.name === y.name && y.checked === false && x.path.path === y.path.path) {
@@ -70,19 +74,24 @@ export class FileManager {
 
     public async save(fileString: string) {
         let json = JSON.parse(fileString);
-        for (let languageCode of json.languageCodes) {
-            let name = json.name + '.' + languageCode + '.resx';
-            let translations: any = {};
-            for (let translation of json.translations) {
-                for (let specificTranslation of translation.specificTranslations) {
-                    if (specificTranslation.language === languageCode) {
-                        translations[translation.key] = specificTranslation.value;
-                    };
+        try {
+            for (let languageCode of json.languageCodes) {
+                let name = json.name + '.' + languageCode + '.resx';
+                let translations: any = {};
+                for (let translation of json.translations) {
+                    for (let specificTranslation of translation.specificTranslations) {
+                        if (specificTranslation.language === languageCode) {
+                            translations[translation.key] = specificTranslation.value;
+                        };
+                    }
                 }
+                let newContent = await resx.js2resx(translations);
+                let uint8 = new TextEncoder().encode(newContent);
+                vscode.workspace.fs.writeFile(vscode.Uri.file(json.path.fsPath + '/' + name), uint8);
             }
-            let newContent = await resx.js2resx(translations);
-            let uint8 = new TextEncoder().encode(newContent);
-            vscode.workspace.fs.writeFile(vscode.Uri.file(json.path.fsPath + '/' + name), uint8);
+            vscode.window.showInformationMessage('Saved :-)');
+        } catch (e: any) {
+            vscode.window.showErrorMessage(e.message);
         }
     }
 }

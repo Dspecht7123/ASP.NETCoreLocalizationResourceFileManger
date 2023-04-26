@@ -5,6 +5,7 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "./getNonce";
 import { FileManager } from "../FileManager";
 import { ITranslationFile } from "../types";
+import { Uri } from "vscode";
 
 export class Panel {
   public static currentPanel: Panel | undefined;
@@ -21,11 +22,13 @@ export class Panel {
     if (Panel.currentPanel) {
       Panel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
-      const panel = vscode.window.createWebviewPanel("resxhelper", "Hello World", vscode.ViewColumn.One, {
+      const panel = vscode.window.createWebviewPanel("resxhelper", "ResXHelper", vscode.ViewColumn.One, {
         // Enable javascript in the webview
         enableScripts: true,
         // Restrict the webview to only load resources from the `out` directory
-        localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'out')]
+        localResourceRoots: [
+          vscode.Uri.joinPath(extensionUri, 'out')
+        ]
       });
 
       Panel.currentPanel = new Panel(panel, extensionUri);
@@ -46,6 +49,7 @@ export class Panel {
   private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     const webviewUri = getUri(webview, extensionUri, ["out", "main.js"]);
     const styleUri = getUri(webview, extensionUri, ["out", "style.css"]);
+    const codiconsUri = getUri(webview, extensionUri, ["out", "codicon.css"]);
     const nonce = getNonce();
     
     return /*html*/ `
@@ -56,6 +60,7 @@ export class Panel {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}'";>
           <link rel="stylesheet" href="${styleUri}">
+          <link href="${codiconsUri}" rel="stylesheet" />
         </head>
         <body>
           <h2>Available Paths:</h2>
@@ -64,12 +69,17 @@ export class Panel {
           <hr>
           <h2>Translations:</h2>
           <vscode-button id="saveButton">Save</vscode-button>
-          <table id="table">
-            <thead>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+          <div class="tscroll">
+            <table id="table">
+              <thead>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <vscode-text-field id="keyInputField" placeholder="please enter a key value">Add key:</vscode-text-field>
+          <br>
+          <vscode-button id="addKeyButton">Add</vscode-button>
         <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
       </html>
@@ -83,7 +93,7 @@ export class Panel {
         const text = message.text;
         let fileManager = new FileManager(vscode.Uri.file(vscode.workspace.rootPath + '/'), this._panel);
         switch (command) {
-          case "hello":
+          case "message":
             vscode.window.showInformationMessage(text);
             return;
           case "opened":

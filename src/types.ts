@@ -4,8 +4,7 @@ import { TranslationFile } from './TranslationFile';
 export declare type readResxFilesCallback = (combinedFiles: ITranslationFile[], currentPanel: vscode.WebviewPanel | undefined) => void;
 
 export interface resxJson {
-    [key: string]: string,
-    "value": string
+    [key: string]: string
 }
 
 export interface ITranslationFile {
@@ -13,16 +12,17 @@ export interface ITranslationFile {
     "path": vscode.Uri,
     "name": string, 
     "languageCodes": string[],
-    "translations": translation[],
+    "translations": ITranslation[],
     "checked": boolean
 }
 
-export interface translation {
+export interface ITranslation {
+    added: boolean;
     key: string, 
-    specificTranslations: specificTranslation[]
+    specificTranslations: ISpecificTranslation[]
 }
 
-export interface specificTranslation {
+export interface ISpecificTranslation {
     "language": string, 
-    "value": resxJson
+    "value": string
 }

@@ -1,3 +1,44 @@
 vscode-dropdown {
-    width: 60%;
+  width: 100%;
+}
+
+.tscroll {
+  width: 100%;
+  height: 60vh;
+  overflow-x: scroll;
+  margin-bottom: 10px;
+  border: solid black 1px;
+}
+
+.tscroll table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: var(--vscode-editor-background);
+}
+
+.tscroll table td:nth-child(2) {
+  position: sticky;
+  left: 0;
+  background-color: var(--vscode-editor-background);
+}
+
+.tscroll table th:first-child {
+  position: sticky;
+  left: 0;
+  background-color: var(--vscode-editor-background);
+}
+
+.tscroll table th:nth-child(2) {
+  position: sticky;
+  left: 0;
+  background-color: var(--vscode-editor-background);
+}
+
+input {
+  background-color: var(--vscode-dropdown-background);
+  color: var(--vscode-dropdown-foreground);
+  font: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  font-size: var(--vscode-font-size);
+  width: 40vh;
 }
