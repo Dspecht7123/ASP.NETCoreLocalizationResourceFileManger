@@ -1,7 +1,7 @@
 {
   "publisher": "woodpecker",
-  "name": "resxhelper",
-  "displayName": "ResXHelper",
+  "name": "locResxManager",
+  "displayName": ".NET Core Localization Resource Manager",
   "description": "",
   "version": "0.0.1",
   "engines": {

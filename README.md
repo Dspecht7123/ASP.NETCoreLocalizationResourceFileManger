@@ -1,15 +1,15 @@
-# ResXHelper
+# .NET Core Localization Resource File Manger
 
-With ResXHelper you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
+With the .NET Core Localization Resource File Manager you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
 This is a student project.
 
 ![ResxHelper](https://github.com/Dspecht7123/ResXHelper/blob/main/ResxHelperScreenshot.png)
 
 ## Features
 
-To open the ResXHelper extension press `Strg+Shift+P` and enter `ResXHelper`.
+To open the extension press `Strg+Shift+P` and enter `ResXHelper`.
 
-ResXHelper searches for all files with the ending `.resx` and combines them into one data structure. 
+The extension searches for all files with the ending `.resx` and combines them into one data structure. 
 For example, the files `Create.de.resx` and `Create.en.resx` would be combined. You would see it in the "Available Paths" select under the path `pathToYourRepository/Create`.
 
 When you select a path, a table with all the keys and corresponding translations is shown. When the Save-Button is pressed, the current data is saved to the corresponding .resx-files.
@@ -23,5 +23,5 @@ This is the first version. There might be some bugs which are not fixed yet.
 ## Release Notes
 
 ### 1.0.0
-Initial release of ResXHelper
+Initial release
 
