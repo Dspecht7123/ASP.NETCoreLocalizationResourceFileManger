@@ -1,7 +1,8 @@
 {
   "publisher": "woodpecker",
-  "name": "locResxManager",
-  "displayName": ".NET Core Localization Resource Manager",
+  "name": "aspNetLocResManager",
+  "displayName": "ASP.NET Core Localization Resource Manager",
+  "repository": "https://github.com/Dspecht7123/ResXHelper",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -15,8 +16,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "resxhelper.resxhelper",
-        "title": "Resx Helper"
+        "command": "resourcemanager.resourcemanager",
+        "title": "Resource Manager"
       }
     ]
   },

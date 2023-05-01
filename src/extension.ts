@@ -6,7 +6,7 @@ import { Panel } from './panels/Panel';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	const helloCommand = vscode.commands.registerCommand("resxhelper.resxhelper", () => {
+	const helloCommand = vscode.commands.registerCommand("resourcemanager.resourcemanager", () => {
 	  Panel.render(context.extensionUri);
 	});
   
