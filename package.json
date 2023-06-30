@@ -3,8 +3,11 @@
   "name": "aspNetLocResManager",
   "displayName": "ASP.NET Core Localization Resource Manager",
   "repository": "https://github.com/Dspecht7123/ResXHelper",
+  "keywords": [
+    "resx"
+  ],
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.77.0"
   },

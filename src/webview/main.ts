@@ -247,13 +247,13 @@ function main() {
         key: key,
         specificTranslations: []
       };
-      for (let specificTranslation of translation.specificTranslations) {
+      /*for (let specificTranslation of translation.specificTranslations) {
         let specificTranslationCopy: ISpecificTranslation = {
           "language": specificTranslation.language,
           "value": ""
         };
         translationCopy.specificTranslations.push(specificTranslationCopy);
-      }
+      }*/
       receivedData.message[index].translations.push(translationCopy);
       buildTranslationsTable(receivedData);
     }
