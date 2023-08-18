@@ -76,7 +76,13 @@ export class FileManager {
         let json = JSON.parse(fileString);
         try {
             for (let languageCode of json.languageCodes) {
-                let name = json.name + '.' + languageCode + '.resx';
+                let name = '';
+                if(languageCode === 'natural')
+                {
+                    name = json.name + '.resx';
+                }else{
+                    name = json.name + '.' + languageCode + '.resx';
+                }
                 let translations: any = {};
                 for (let translation of json.translations) {
                     for (let specificTranslation of translation.specificTranslations) {

@@ -31,3 +31,6 @@ Update keywords
 ### 0.0.4
 bugfix
 
+### 0.0.6
+fix issue #1 (see github repository)
+

@@ -12,13 +12,39 @@ export class TranslationFile implements ITranslationFile {
     constructor(path: Uri, name: string, content: resxJson[]) {
         this.path = path;
         this.fullName = name;
-        this.name = name.substring(0, name.indexOf("."));
+        this.name = this.getName(name);
         this.translations = this.getTranslationsObject(content, this.getLanguageCode(name));
         this.languageCodes.push(this.getLanguageCode(name));
     }
 
+    private getName(fileName: string): string {
+        fileName = fileName.replace('.resx', '');
+        let lastDotIndex = fileName.lastIndexOf('.');
+        if(lastDotIndex === -1){
+            return fileName;
+        }else{
+            let language = fileName.substring(lastDotIndex + 1, fileName.length);
+            if(language.length === 2 || (language.length === 5 && language.includes('-'))){
+                return fileName.substring(0, lastDotIndex);;
+            }else{
+                return fileName;
+            }
+        }
+    }
+
     private getLanguageCode(fileName: string): string {
-        return fileName.substring(fileName.indexOf(".") + 1, fileName.indexOf(".", fileName.indexOf(".") + 1))
+        fileName = fileName.replace('.resx', '');
+        let lastDotIndex = fileName.lastIndexOf('.');
+        if(lastDotIndex === -1){
+            return 'natural';
+        }else{
+            let language = fileName.substring(lastDotIndex + 1, fileName.length);
+            if(language.length === 2 || (language.length === 5 && language.includes('-'))){
+                return language;
+            }else{
+                return 'natural';
+            }
+        }
     }
 
     private getTranslationsObject(object: any[], language: string): ITranslation[] {
