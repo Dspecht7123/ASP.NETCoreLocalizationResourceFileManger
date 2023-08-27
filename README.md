@@ -3,7 +3,8 @@
 With the ASP.NET Core Localization Resource File Manager you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
 This is a student project.
 
-![ResourceManager](https://github.com/Dspecht7123/ASP.NETCoreLocalizationResourceFileManger/blob/main/ResxHelperScreenshot.png)
+<img src="https://raw.githubusercontent.com/Dspecht7123/ASP.NETCoreLocalizationResourceFileManger/main/ResxHelperScreenshot.png" alt="Resource Manager" width="60%"/>
+
 
 ## Features
 
