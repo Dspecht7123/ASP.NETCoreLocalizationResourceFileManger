@@ -35,3 +35,6 @@ bugfix
 ### 0.0.6
 fix issue #1 (see github repository)
 
+### 0.0.7
+update image link in readme
+
