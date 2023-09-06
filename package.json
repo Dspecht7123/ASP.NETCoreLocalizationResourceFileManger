@@ -2,18 +2,22 @@
   "publisher": "woodpecker",
   "name": "aspNetLocResManager",
   "displayName": "ASP.NET Core Localization Resource Manager",
-  "repository": "https://github.com/Dspecht7123/ResXHelper",
+  "repository": "https://github.com/Dspecht7123/ASP.NETCoreLocalizationResourceFileManger",
   "keywords": [
-    "resx"
+    "resx", "localization", "asp.net"
   ],
-  "description": "",
-  "version": "0.0.7",
+  "description": "Edit related resx files for different languages in one view",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.77.0"
   },
   "categories": [
     "Other"
   ],
+  "author": {
+    "name": "David"
+  },
+  "icon": "images/icon.png",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
