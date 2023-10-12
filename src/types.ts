@@ -24,5 +24,6 @@ export interface ITranslation {
 
 export interface ISpecificTranslation {
     "language": string, 
-    "value": string
+    "value": string,
+    "comment": string
 }

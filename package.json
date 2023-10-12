@@ -26,7 +26,16 @@
         "command": "resourcemanager.resourcemanager",
         "title": "Resource Manager"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "ResourceManager",
+      "properties": {
+        "aspNetLocResManager.specialLanguageCodes": {
+          "type": "string",
+          "markdownDescription": "separate the language codes by a slash. example: de-DE-Gender/other-special-language-code/another-one"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

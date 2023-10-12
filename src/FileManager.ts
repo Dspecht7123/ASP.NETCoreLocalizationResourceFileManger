@@ -12,10 +12,12 @@ export class FileManager {
     private readResxFilesFinished: readResxFilesCallback = () => { };
     private combinedFiles: ITranslationFile[] = [];
     private currentPanel: vscode.WebviewPanel
+    private customLanguages: string[]
 
-    constructor(dir: vscode.Uri, panel: vscode.WebviewPanel) {
+    constructor(dir: vscode.Uri, panel: vscode.WebviewPanel, customLanguages: string[]) {
         this.dir = dir;
         this.currentPanel = panel;
+        this.customLanguages = customLanguages
     }
 
     public readResxFiles(cb: readResxFilesCallback) {
@@ -37,14 +39,13 @@ export class FileManager {
                         try {
                             let readFilePromise = vscode.workspace.fs.readFile(vscode.Uri.file(dir.fsPath + '/' + x[0]));
                             let fileUint8Array = await readFilePromise;
-                            let resx2jsPromise = await resx.resx2js(fileUint8Array.toString());
+                            let resx2jsPromise = await resx.resx2js(fileUint8Array.toString(), true);
                             let content = await resx2jsPromise;
-                            let translationFile = new TranslationFile(dir, x[0], content);
+                            let translationFile = new TranslationFile(dir, x[0], content, this.customLanguages);
                             this.resxFiles.push(translationFile);
                         } catch (e: any) {
                             vscode.window.showErrorMessage(e.message);
                         }
-
                     }
                 }
             }
@@ -86,8 +87,11 @@ export class FileManager {
                 let translations: any = {};
                 for (let translation of json.translations) {
                     for (let specificTranslation of translation.specificTranslations) {
-                        if (specificTranslation.language === languageCode) {
-                            translations[translation.key] = specificTranslation.value;
+                        if (specificTranslation.language === languageCode && specificTranslation.value !== '') {
+                            translations[translation.key] = {
+                                "value": specificTranslation.value,
+                                "comment": specificTranslation.comment
+                            }
                         };
                     }
                 }

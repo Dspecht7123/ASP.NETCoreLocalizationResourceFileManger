@@ -88,10 +88,12 @@ export class Panel {
 
   private _setWebviewMessageListener(webview: vscode.Webview) {
     webview.onDidReceiveMessage(
-      (message: any) => {
+      async (message: any) => {
         const command = message.command;
         const text = message.text;
-        let fileManager = new FileManager(vscode.Uri.file(vscode.workspace.rootPath + '/'), this._panel);
+        
+        let customLanguages = vscode.workspace.getConfiguration('aspNetLocResManager').specialLanguageCodes.split('/');
+        let fileManager = new FileManager(vscode.Uri.file(vscode.workspace.rootPath + '/'), this._panel, customLanguages);
         switch (command) {
           case "message":
             vscode.window.showInformationMessage(text);

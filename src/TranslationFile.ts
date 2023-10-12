@@ -8,10 +8,12 @@ export class TranslationFile implements ITranslationFile {
     public languageCodes: string[] = []
     public translations: ITranslation[]
     public checked: boolean = false;
+    private customLanguages: string[]
 
-    constructor(path: Uri, name: string, content: resxJson[]) {
+    constructor(path: Uri, name: string, content: resxJson[], customLanguages: string[]) {
         this.path = path;
         this.fullName = name;
+        this.customLanguages = customLanguages;
         this.name = this.getName(name);
         this.translations = this.getTranslationsObject(content, this.getLanguageCode(name));
         this.languageCodes.push(this.getLanguageCode(name));
@@ -24,7 +26,7 @@ export class TranslationFile implements ITranslationFile {
             return fileName;
         }else{
             let language = fileName.substring(lastDotIndex + 1, fileName.length);
-            if(language.length === 2 || (language.length === 5 && language.includes('-'))){
+            if(language.length === 2 || (language.length === 5 && language.includes('-')) || this.customLanguages.includes(language)){
                 return fileName.substring(0, lastDotIndex);;
             }else{
                 return fileName;
@@ -39,7 +41,7 @@ export class TranslationFile implements ITranslationFile {
             return 'natural';
         }else{
             let language = fileName.substring(lastDotIndex + 1, fileName.length);
-            if(language.length === 2 || (language.length === 5 && language.includes('-'))){
+            if(language.length === 2 || (language.length === 5 && language.includes('-')) || this.customLanguages.includes(language)){
                 return language;
             }else{
                 return 'natural';
@@ -55,7 +57,8 @@ export class TranslationFile implements ITranslationFile {
                 "added": false,
                 "specificTranslations": [{
                     "language": language,
-                    "value": value
+                    "value": value.value,
+                    "comment": value.comment
                 }]
             };
             translations.push(translation);
