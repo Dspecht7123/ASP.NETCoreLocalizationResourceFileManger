@@ -7,7 +7,7 @@
     "resx", "localization", "asp.net"
   ],
   "description": "Edit related resx files for different languages in one view",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.77.0"
   },
