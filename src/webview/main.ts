@@ -138,11 +138,17 @@ function main() {
             }
             );
             let input = createInputElement(translation.specificTranslations[newLength - 1]);
+            translation.specificTranslations[newLength - 1].createdByResourceManager = true;
             row.insertCell(columnCounter + 1).appendChild(input);
           } else {
             row.insertCell(columnCounter).innerHTML = specificTranslation.language;
             let input = createInputElement(specificTranslation);
-            input.value = specificTranslation.value;
+            specificTranslation.createdByResourceManager = false;
+            if (typeof specificTranslation.value === 'string' || specificTranslation.value instanceof String){
+              input.value = specificTranslation.value;
+            }else{
+              input.value = specificTranslation.value.value[0];
+            }
             row.insertCell(columnCounter + 1).appendChild(input);
 
           }
@@ -171,10 +177,11 @@ function main() {
 
   function createRemoveButtonElement(boundTranslation: any) {
     let button = document.createElement('vscode-button') as Button;
-    button.appearance = 'icon'; 
-    let span = document.createElement('span');
-    span.className = "codicon codicon-close";
-    button.appendChild(span);
+    button.innerText = 'X';
+    //button.appearance = 'icon'; 
+    //let span = document.createElement('span');
+    //span.className = "codicon codicon-close";
+    //button.appendChild(span);
     button.addEventListener('click', function (e: any) {
       let translationFileIndex = getTranslationFileIndex(receivedData);
       if (translationFileIndex !== undefined) {
