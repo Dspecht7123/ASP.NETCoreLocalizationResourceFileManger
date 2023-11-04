@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-const resx = require('resx')
+const resx = require('./utilities/resx/lib/index.js')
 import { readResxFilesCallback } from './types';
 import { ITranslationFile } from './types';
 import { TranslationFile } from './TranslationFile';
@@ -86,11 +86,24 @@ export class FileManager {
                 let translations: any = {};
                 for (let translation of json.translations) {
                     for (let specificTranslation of translation.specificTranslations) {
-                        if (specificTranslation.language === languageCode && specificTranslation.value !== '') {
-                            translations[translation.key] = {
-                                "value": specificTranslation.value,
-                                "comment": specificTranslation.comment
+                        if (specificTranslation.language === languageCode) {
+                            let key: string = translation.key;
+                            if(specificTranslation.value !== '' && specificTranslation.comment !== undefined){
+                                translations[key] = {
+                                    "value": specificTranslation.value,
+                                    "comment": specificTranslation.comment
+                                }
+                            }else if(specificTranslation.value === '' && specificTranslation.comment !== undefined){
+                                translations[key] = {
+                                    "value": specificTranslation.value,
+                                    "comment": specificTranslation.comment
+                                }
+                            }else if(specificTranslation.value !== '' && specificTranslation.createdByResourceManager){
+                                translations[key] = specificTranslation.value;
+                            }else if(specificTranslation.value !== '' && !specificTranslation.createdByResourceManager){
+                                translations[key] = specificTranslation.value;
                             }
+                            
                         };
                     }
                 }
