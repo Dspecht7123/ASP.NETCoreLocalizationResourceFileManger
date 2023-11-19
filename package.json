@@ -7,7 +7,7 @@
     "resx", "localization", "asp.net"
   ],
   "description": "Edit related resx files for different languages in one view",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -64,7 +64,6 @@
   "dependencies": {
     "@vscode/codicons": "^0.0.32",
     "@vscode/webview-ui-toolkit": "^1.2.2",
-    "esbuild-plugin-copy": "^2.1.1",
-    "resx": "^2.0.3"
+    "esbuild-plugin-copy": "^2.1.1"
   }
 }

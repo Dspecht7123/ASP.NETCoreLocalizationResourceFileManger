@@ -102,8 +102,9 @@ export class FileManager {
                                 translations[key] = specificTranslation.value;
                             }else if(specificTranslation.value !== '' && !specificTranslation.createdByResourceManager){
                                 translations[key] = specificTranslation.value;
+                            }else if(specificTranslation.value === '' && !specificTranslation.createdByResourceManager){
+                                translations[key] = specificTranslation.value;
                             }
-                            
                         };
                     }
                 }

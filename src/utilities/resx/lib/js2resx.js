@@ -228,7 +228,7 @@ const js2resxClb = (resources, opt, cb) => {
       },
       value: resources[key]
     }
-    if (typeof resources[key] === 'object' && resources[key].value) {
+    if (typeof resources[key] === 'object') {
       str.value = resources[key].value
       str.comment = resources[key].comment
     }
