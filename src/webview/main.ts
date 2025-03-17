@@ -169,8 +169,15 @@ function main() {
 
   function createInputElement(specificTranslation: any) {
     let input = document.createElement('input');
+    if (specificTranslation.value === ""){
+      input.style.borderColor = "red";
+    }
+
     input.addEventListener('input', function (e: any) {
       specificTranslation.value = e.target.value;
+
+      let _color = e.target.value === "" ? "red" : "";
+      input.style.borderColor = _color;
     }.bind(specificTranslation), true);
     return input;
   }
