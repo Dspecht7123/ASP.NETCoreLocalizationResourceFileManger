@@ -169,17 +169,18 @@ function main() {
 
   function createInputElement(specificTranslation: any) {
     let input = document.createElement('input');
-    if (specificTranslation.value === ""){
-      input.style.borderColor = "red";
-    }
+    input.style.borderColor = getInputColor(specificTranslation.value);
 
     input.addEventListener('input', function (e: any) {
       specificTranslation.value = e.target.value;
 
-      let _color = e.target.value === "" ? "red" : "";
-      input.style.borderColor = _color;
+      input.style.borderColor = getInputColor(e.target.value);
     }.bind(specificTranslation), true);
     return input;
+  }
+  function getInputColor(value: string){
+    let result = value === "" ? "red" : "";
+    return result;
   }
 
   function createRemoveButtonElement(boundTranslation: any) {
@@ -235,6 +236,10 @@ function main() {
   if (addKeyButton !== null) {
     addKeyButton.addEventListener("click", () => { addKey() });
   }
+  const searchBox = document.getElementById("searchBox");
+  if (searchBox !== null) {
+    searchBox.addEventListener("change", (e: Event) => { searchKeys(e.currentTarget as HTMLInputElement) });
+  }
 
   function addKey() {
     let keyInputField = document.getElementById("keyInputField") as HTMLInputElement;
@@ -249,6 +254,23 @@ function main() {
         addTableRow(newKey);
         keyInputField.value = "";
       }
+    }
+  }
+  function searchKeys(e: HTMLInputElement) {
+    let rows = document.querySelectorAll("tr");
+    if (e.value.length < 3) {
+      rows.forEach(e=>{
+        e.hidden = false;
+      });
+      return;
+    }
+    for (let index = 1; index < rows.length; index++) {
+      const currentRow = rows[index];
+      let hideElement = false;
+      if (!currentRow.querySelectorAll("input")[0].value.includes(e.value)) {
+        hideElement = true;
+      }
+      currentRow.hidden = hideElement;
     }
   }
 

@@ -42,3 +42,11 @@ input {
   font-size: var(--vscode-font-size);
   width: 40vh;
 }
+.action-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.search-box{
+  margin-left: 15px;
+}
