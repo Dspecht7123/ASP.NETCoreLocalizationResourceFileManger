@@ -77,8 +77,12 @@ export class Panel {
               </tbody>
             </table>
           </div>
-          <vscode-text-field id="keyInputField" placeholder="please enter a key value">Add key:</vscode-text-field>
-          <br>
+          <div class="action-row">
+            <vscode-text-field id="keyInputField" placeholder="please enter a key value">Add key:</vscode-text-field>
+            <div class="search-box">
+              <vscode-text-field type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-text-field>
+            </div>
+          </div>
           <vscode-button id="addKeyButton">Add</vscode-button>
         <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
