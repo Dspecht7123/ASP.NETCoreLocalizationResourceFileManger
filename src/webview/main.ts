@@ -243,6 +243,7 @@ function main() {
 
   function addKey() {
     let keyInputField = document.getElementById("keyInputField") as HTMLInputElement;
+    let searchBox = document.getElementById("searchBox") as HTMLInputElement;
     if (keyInputField !== null) {
       let newKey = keyInputField.value;
       if (newKey === "") {
@@ -253,21 +254,22 @@ function main() {
       } else {
         addTableRow(newKey);
         keyInputField.value = "";
+        searchBox.value = "";
       }
     }
   }
   function searchKeys(e: HTMLInputElement) {
-    let rows = document.querySelectorAll("tr");
+    let rows = table.getElementsByTagName("tbody")[0].querySelectorAll("tr");
     if (e.value.length < 3) {
       rows.forEach(e=>{
         e.hidden = false;
       });
       return;
     }
-    for (let index = 1; index < rows.length; index++) {
+    for (let index = 0; index < rows.length; index++) {
       const currentRow = rows[index];
       let hideElement = false;
-      if (!currentRow.querySelectorAll("input")[0].value.includes(e.value)) {
+      if (!currentRow.querySelectorAll("input")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
         hideElement = true;
       }
       currentRow.hidden = hideElement;

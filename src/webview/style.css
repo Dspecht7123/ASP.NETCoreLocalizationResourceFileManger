@@ -50,3 +50,6 @@ input {
 .search-box{
   margin-left: 15px;
 }
+.search-box-inner{
+  width: 250px;
+}
