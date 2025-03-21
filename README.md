@@ -47,3 +47,6 @@ fix issue #2 #3 and #4
 ### 0.1.0
 improve solution for issue #2 and #3
 
+### 0.1.1
+highlight missing localizations
+
