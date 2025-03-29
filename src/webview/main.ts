@@ -260,7 +260,7 @@ function main() {
   }
   function searchKeys(e: HTMLInputElement) {
     let rows = table.getElementsByTagName("tbody")[0].querySelectorAll("tr");
-    if (e.value.length < 3) {
+    if (e.value.length === 0) {
       rows.forEach(e=>{
         e.hidden = false;
       });
