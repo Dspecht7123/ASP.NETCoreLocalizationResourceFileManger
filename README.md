@@ -1,7 +1,6 @@
 # ASP.NET Core Localization Resource File Manger
 
 With the ASP.NET Core Localization Resource File Manager you can maintaine several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
-This is a student project.
 
 <img src="https://raw.githubusercontent.com/Dspecht7123/ASP.NETCoreLocalizationResourceFileManger/main/ResxHelperScreenshot.png" alt="Resource Manager" width="60%"/>
 
@@ -20,33 +19,7 @@ When you select a path, a table with all the keys and corresponding translations
 
 If you want to add a new key, enter the key-value in the input-field under the table and press the Add-Button. The new key will be added at the top of the table.
 
-## Known Issues
+If you want to search for keys, just type the key you are searching for in the "Key Search" field.
 
-This is the first version. There might be some bugs which are not fixed yet.
 
-## Release Notes
-
-### 0.0.1
-Initial release
-
-### 0.0.2
-Update keywords
-
-### 0.0.4
-bugfix
-
-### 0.0.6
-fix issue #1 (see github repository)
-
-### 0.0.7
-update image link in readme
-
-### 0.0.9
-fix issue #2 #3 and #4
-
-### 0.1.0
-improve solution for issue #2 and #3
-
-### 0.1.1
-highlight missing localizations
 
