@@ -238,7 +238,7 @@ function main() {
   }
   const searchBox = document.getElementById("searchBox");
   if (searchBox !== null) {
-    searchBox.addEventListener("change", (e: Event) => { searchKeys(e.currentTarget as HTMLInputElement) });
+    searchBox.addEventListener("input", (e: Event) => { searchKeys(e.currentTarget as HTMLInputElement) });
   }
 
   function addKey() {
