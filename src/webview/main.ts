@@ -169,17 +169,18 @@ function main() {
 
   function createInputElement(specificTranslation: any) {
     let input = document.createElement('input');
-    if (specificTranslation.value === ""){
-      input.style.borderColor = "red";
-    }
+    input.style.borderColor = getInputColor(specificTranslation.value);
 
     input.addEventListener('input', function (e: any) {
       specificTranslation.value = e.target.value;
 
-      let _color = e.target.value === "" ? "red" : "";
-      input.style.borderColor = _color;
+      input.style.borderColor = getInputColor(e.target.value);
     }.bind(specificTranslation), true);
     return input;
+  }
+  function getInputColor(value: string){
+    let result = value === "" ? "red" : "";
+    return result;
   }
 
   function createRemoveButtonElement(boundTranslation: any) {
@@ -235,9 +236,14 @@ function main() {
   if (addKeyButton !== null) {
     addKeyButton.addEventListener("click", () => { addKey() });
   }
+  const searchBox = document.getElementById("searchBox");
+  if (searchBox !== null) {
+    searchBox.addEventListener("input", (e: Event) => { searchKeys(e.currentTarget as HTMLInputElement) });
+  }
 
   function addKey() {
     let keyInputField = document.getElementById("keyInputField") as HTMLInputElement;
+    let searchBox = document.getElementById("searchBox") as HTMLInputElement;
     if (keyInputField !== null) {
       let newKey = keyInputField.value;
       if (newKey === "") {
@@ -248,7 +254,25 @@ function main() {
       } else {
         addTableRow(newKey);
         keyInputField.value = "";
+        searchBox.value = "";
       }
+    }
+  }
+  function searchKeys(e: HTMLInputElement) {
+    let rows = table.getElementsByTagName("tbody")[0].querySelectorAll("tr");
+    if (e.value.length === 0) {
+      rows.forEach(e=>{
+        e.hidden = false;
+      });
+      return;
+    }
+    for (let index = 0; index < rows.length; index++) {
+      const currentRow = rows[index];
+      let hideElement = false;
+      if (!currentRow.querySelectorAll("input")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
+        hideElement = true;
+      }
+      currentRow.hidden = hideElement;
     }
   }
 
