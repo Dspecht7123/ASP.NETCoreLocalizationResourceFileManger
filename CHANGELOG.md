@@ -2,8 +2,29 @@
 
 All notable changes to the "resxhelper" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## 0.1.2
+input field to search translation keys
 
-## [Unreleased]
+## 0.1.1
+highlight missing localizations
 
-- Initial release
+## 0.1.0
+improve solution for issue #2 and #3
+
+## 0.0.9
+fix issue #2 #3 and #4
+
+## 0.0.7
+update image link in readme
+
+## 0.0.6
+fix issue #1 (see github repository)
+
+## 0.0.4
+bugfix
+
+## 0.0.2
+Update keywords
+
+## 0.0.1
+Initial release
