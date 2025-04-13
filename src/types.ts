@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { TranslationFile } from './TranslationFile';
 
-export declare type readResxFilesCallback = (combinedFiles: ITranslationFile[], currentPanel: vscode.WebviewPanel | undefined) => void;
+export declare type readResxFilesCallback = (combinedFiles: ITranslationFile[], selectedPath: string | undefined, currentPanel: vscode.WebviewPanel | undefined) => void;
 
 export interface resxJson {
     [key: string]: string

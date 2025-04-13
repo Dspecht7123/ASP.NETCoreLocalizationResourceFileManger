@@ -4,30 +4,39 @@ import { readResxFilesCallback } from './types';
 import { ITranslationFile } from './types';
 import { TranslationFile } from './TranslationFile';
 import { TextEncoder } from 'util';
+import { retrieveKeyValuePairFromWorkspaceState } from './utilities/WorkspaceState';
 
 export class FileManager {
 
-    private dir: vscode.Uri;
+    private dirs: vscode.Uri[];
     private resxFiles: TranslationFile[] = [];
     private readResxFilesFinished: readResxFilesCallback = () => { };
     private combinedFiles: ITranslationFile[] = [];
-    private currentPanel: vscode.WebviewPanel
-    private customLanguages: string[]
+    private currentPanel: vscode.WebviewPanel;
+    private customLanguages: string[];
+    private context: vscode.ExtensionContext;
 
-    constructor(dir: vscode.Uri, panel: vscode.WebviewPanel, customLanguages: string[]) {
-        this.dir = dir;
+    constructor(context: vscode.ExtensionContext, dirs: vscode.Uri[], panel: vscode.WebviewPanel, customLanguages: string[]) {
+        this.dirs = dirs;
         this.currentPanel = panel;
         this.customLanguages = customLanguages
+        this.context = context;
     }
 
     public readResxFiles(cb: readResxFilesCallback) {
         this.resxFiles = [];
         this.readResxFilesFinished = cb;
-        this.walkFiles(this.dir, 0);
+
+        return new Promise(async (resolve, reject) => {
+            for(var dir of this.dirs) {
+                await this.walkFiles(dir, 0);
+            }
+            resolve("Success!");
+            this.combineFiles();
+        });
     }
 
     private async walkFiles(dir: vscode.Uri, index: number) {
-        return new Promise(async (resolve, reject) => {
             let readDirectoryPromise = vscode.workspace.fs.readDirectory(dir);
             let fileArray = await readDirectoryPromise;
 
@@ -49,11 +58,6 @@ export class FileManager {
                     }
                 }
             }
-            resolve("Success!");
-            if (index === 0) {
-                this.combineFiles();
-            }
-        });
     }
 
     private combineFiles() {
@@ -70,7 +74,7 @@ export class FileManager {
             }
             x.checked = true;
         }
-        this.readResxFilesFinished(this.combinedFiles, this.currentPanel);
+        this.readResxFilesFinished(this.combinedFiles, retrieveKeyValuePairFromWorkspaceState(this.context, 'selectedPath'), this.currentPanel);
     }
 
     public async save(fileString: string) {

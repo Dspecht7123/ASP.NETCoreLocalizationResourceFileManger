@@ -5,20 +5,23 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "./getNonce";
 import { FileManager } from "../FileManager";
 import { ITranslationFile } from "../types";
-import { Uri } from "vscode";
+import { saveKeyValuePairToWorkspaceState } from "../utilities/WorkspaceState";
 
 export class Panel {
   public static currentPanel: Panel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
+  private _context: vscode.ExtensionContext;
 
-  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+  private constructor(panel: vscode.WebviewPanel, context: vscode.ExtensionContext) {
     this._panel = panel;
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-    this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
+    this._panel.webview.html = this._getWebviewContent(this._panel.webview, context.extensionUri);
     this._setWebviewMessageListener(this._panel.webview);
+    this._context = context;
   }
-  public static render(extensionUri: vscode.Uri) {
+
+  public static render(context: vscode.ExtensionContext) {
     if (Panel.currentPanel) {
       Panel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
@@ -27,11 +30,11 @@ export class Panel {
         enableScripts: true,
         // Restrict the webview to only load resources from the `out` directory
         localResourceRoots: [
-          vscode.Uri.joinPath(extensionUri, 'out')
+          vscode.Uri.joinPath(context.extensionUri, 'out')
         ]
       });
 
-      Panel.currentPanel = new Panel(panel, extensionUri);
+      Panel.currentPanel = new Panel(panel, context);
     }
   }
   public dispose() {
@@ -89,7 +92,7 @@ export class Panel {
       </html>
     `;
   }
-
+  
   private _setWebviewMessageListener(webview: vscode.Webview) {
     webview.onDidReceiveMessage(
       async (message: any) => {
@@ -97,17 +100,19 @@ export class Panel {
         const text = message.text;
         
         let customLanguages = vscode.workspace.getConfiguration('aspNetLocResManager').specialLanguageCodes.split('/');
-        let fileManager = new FileManager(vscode.Uri.file(vscode.workspace.rootPath + '/'), this._panel, customLanguages);
+        let fileManager = new FileManager(this._context, this.getUris(), this._panel, customLanguages);
         switch (command) {
           case "message":
             vscode.window.showInformationMessage(text);
             return;
           case "opened":
-            fileManager.readResxFiles(this.walkFilesFinished);
+            fileManager.readResxFiles(Panel.walkFilesFinished);
             return;
           case "update":
             fileManager.save(message.json);
               return;
+          case "pathSelected":
+            saveKeyValuePairToWorkspaceState(this._context, "selectedPath", text)
         }
       },
       undefined,
@@ -115,11 +120,27 @@ export class Panel {
     );
   }
 
-  private walkFilesFinished(combinedFiles: ITranslationFile[], currentPanel: vscode.WebviewPanel | undefined) {
-		console.log(combinedFiles);
-		//get data of the resx files and convert it to one json;
+  private getUris(): vscode.Uri[] {
+    var uris: vscode.Uri[] = [];
+    
+    if(vscode.workspace.workspaceFolders != undefined) {
+      for(var path of vscode.workspace.workspaceFolders) {
+        uris.push(vscode.Uri.file(path.uri.path));
+      }
+      return uris;
+    }
+
+    vscode.window.showErrorMessage('No workspace folders available');
+    return uris;
+  }
+
+  public static walkFilesFinished(combinedFiles: ITranslationFile[], selectedPath: string | undefined, currentPanel: vscode.WebviewPanel | undefined) {
 		if (currentPanel !== undefined) {
-			currentPanel.webview.postMessage({ command: 'receivedata', message: combinedFiles });
+			currentPanel.webview.postMessage({ 
+        command: 'receivedata',
+        message: combinedFiles,
+        selectedPath: selectedPath
+      });
 		}
 	}
 }

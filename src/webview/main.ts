@@ -23,6 +23,10 @@ function main() {
   const select = document.getElementById("paths") as Dropdown;
   select.addEventListener("change", function () {
     buildTranslationsTable(receivedData);
+    vscode.postMessage({
+      command: 'pathSelected',
+      text: select.value
+    })
   })
 
   // Handle the message inside the webview
@@ -67,23 +71,26 @@ function main() {
 
   function addPathsToSelect(message: any) {
     removeSelectOptions(select);
-    let firstOption = true;
-    let option = new Option("please select a path...", "");
-    select.appendChild(option);
+
+    if(receivedData.selectedPath != undefined) {
+      let option = new Option(receivedData.selectedPath, receivedData.selectedPath, true, true);
+      select.appendChild(option);
+      select.value = receivedData.selectedPath;
+    } else {
+      let option = new Option("please select a path...", "");
+      select.appendChild(option);
+    }
+    
     for (let translationFile of message.message) {
       console.log(translationFile.path.fsPath + "/" + translationFile.name);
       let text = translationFile.path.fsPath + "/" + translationFile.name;
       let value = translationFile.path.fsPath + "/" + translationFile.name;
-      let option: Option;
-      if (firstOption) {
-        option = new Option(text, value, true);
-      } else {
-        option = new Option(text, value);
+
+      if(text != receivedData.selectedPath) {
+        let option = new Option(text, value);
+        select.appendChild(option);
       }
-      select.appendChild(option);
-      firstOption = false;
     }
-    select.selectFirstOption();
   }
 
   function removeSelectOptions(select: any) {
