@@ -11,11 +11,11 @@ export function retrieveKeyValuePairFromWorkspaceState(context: vscode.Extension
 }
 
 export function saveKeyValuePairToWorkspaceState(context: vscode.ExtensionContext, key: string, value: any): void {
-if(context != undefined) {
-    const workspaceState = context.workspaceState;
+    if(context != undefined) {
+        const workspaceState = context.workspaceState;
 
-    workspaceState.update('aspNetLocResManager' + key, value);
-} else {
-    vscode.window.showErrorMessage('Workspace state is not available.');
-}
+        workspaceState.update('aspNetLocResManager' + key, value);
+    } else {
+        vscode.window.showErrorMessage('Workspace state is not available.');
+    }
 }
