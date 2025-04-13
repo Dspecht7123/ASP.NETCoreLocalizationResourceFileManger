@@ -4,7 +4,7 @@ import { readResxFilesCallback } from './types';
 import { ITranslationFile } from './types';
 import { TranslationFile } from './TranslationFile';
 import { TextEncoder } from 'util';
-import { Panel } from './panels/Panel';
+import { retrieveKeyValuePairFromWorkspaceState } from './utilities/WorkspaceState';
 
 export class FileManager {
 
@@ -74,7 +74,7 @@ export class FileManager {
             }
             x.checked = true;
         }
-        this.readResxFilesFinished(this.combinedFiles, Panel.retrieveKeyValuePairFromWorkspaceState(this.context, 'selectedPath'), this.currentPanel);
+        this.readResxFilesFinished(this.combinedFiles, retrieveKeyValuePairFromWorkspaceState(this.context, 'selectedPath'), this.currentPanel);
     }
 
     public async save(fileString: string) {

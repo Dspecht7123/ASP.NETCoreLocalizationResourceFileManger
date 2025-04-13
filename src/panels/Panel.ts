@@ -5,6 +5,7 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "./getNonce";
 import { FileManager } from "../FileManager";
 import { ITranslationFile } from "../types";
+import { saveKeyValuePairToWorkspaceState } from "../utilities/WorkspaceState";
 
 export class Panel {
   public static currentPanel: Panel | undefined;
@@ -111,7 +112,7 @@ export class Panel {
             fileManager.save(message.json);
               return;
           case "pathSelected":
-            Panel.saveKeyValuePairToWorkspaceState(this._context, "selectedPath", text)
+            saveKeyValuePairToWorkspaceState(this._context, "selectedPath", text)
         }
       },
       undefined,
@@ -121,17 +122,19 @@ export class Panel {
 
   private getUris(): vscode.Uri[] {
     var uris: vscode.Uri[] = [];
+    
     if(vscode.workspace.workspaceFolders != undefined) {
       for(var path of vscode.workspace.workspaceFolders) {
         uris.push(vscode.Uri.file(path.uri.path));
       }
       return uris;
     }
+
+    vscode.window.showErrorMessage('No workspace folders available');
     return uris;
   }
 
   public static walkFilesFinished(combinedFiles: ITranslationFile[], selectedPath: string | undefined, currentPanel: vscode.WebviewPanel | undefined) {
-		console.log(combinedFiles);
 		if (currentPanel !== undefined) {
 			currentPanel.webview.postMessage({ 
         command: 'receivedata',
@@ -140,25 +143,4 @@ export class Panel {
       });
 		}
 	}
-
-  public static retrieveKeyValuePairFromWorkspaceState(context: vscode.ExtensionContext, key: string): string | undefined {
-    if(context != undefined) {
-      const workspaceState = context.workspaceState;
-      return workspaceState.get('aspNetLocResManager' + key);
-    } else {
-      vscode.window.showErrorMessage('Workspace state is not available.');
-    }
-  }
-
-  public static saveKeyValuePairToWorkspaceState(context: vscode.ExtensionContext, key: string, value: any): void {
-    if(context != undefined) {
-      const workspaceState = context.workspaceState;
-
-      workspaceState.update('aspNetLocResManager' + key, value);
-    } else {
-      vscode.window.showErrorMessage('Workspace state is not available.');
-    }
-  }
-
-  
 }

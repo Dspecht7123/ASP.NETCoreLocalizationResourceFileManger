@@ -18,4 +18,3 @@ export function deactivate() {}
 
 //TODO: error handling
 //TODO: testing
-//TODO: extract workspace state methods to utils
