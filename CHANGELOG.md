@@ -2,6 +2,9 @@
 
 All notable changes to the "resxhelper" extension will be documented in this file.
 
+## 0.2.0
+- command to add single translation
+
 ## 0.1.3
 - read resx files in all workspace folders
 - save selected path in workspace state
