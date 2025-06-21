@@ -67,8 +67,8 @@ export class Panel {
         </head>
         <body>
           <h2>Available Paths:</h2>
-          <vscode-dropdown id="paths" name="paths">
-          </vscode-dropdown>
+            <vscode-single-select id="paths" name="paths">
+            </vscode-single-select>
           <hr>
           <h2>Translations:</h2>
           <vscode-button id="saveButton">Save</vscode-button>
@@ -81,9 +81,9 @@ export class Panel {
             </table>
           </div>
           <div class="action-row">
-            <vscode-text-field id="keyInputField" placeholder="please enter a key value">Add key:</vscode-text-field>
+            <vscode-textfield id="keyInputField" placeholder="please enter a key value">Add key:</vscode-textfield>
             <div class="search-box">
-              <vscode-text-field type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-text-field>
+              <vscode-textfield type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-textfield>
             </div>
           </div>
           <vscode-button id="addKeyButton">Add</vscode-button>

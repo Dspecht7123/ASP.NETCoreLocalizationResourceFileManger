@@ -1,9 +1,8 @@
-// file: src/webview/main.ts
-
-import { provideVSCodeDesignSystem, vsCodeButton, Button, vsCodeDropdown, Dropdown, vsCodeOption, Option, vsCodeTextField, TextField } from "@vscode/webview-ui-toolkit";
 import { ISpecificTranslation, ITranslation } from "../types";
-
-provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption(), vsCodeTextField());
+import "@vscode-elements/elements/dist/vscode-button/index.js";
+import "@vscode-elements/elements/dist/vscode-single-select/index.js";
+import "@vscode-elements/elements/dist/vscode-option/index.js";
+import "@vscode-elements/elements/dist/vscode-textfield/index.js";
 
 window.addEventListener("load", main);
 
@@ -20,12 +19,14 @@ function main() {
     command: 'opened'
   })
 
-  const select = document.getElementById("paths") as Dropdown;
-  select.addEventListener("change", function () {
+  let path = "";
+  const select = document.getElementById("paths");
+  select.addEventListener("change", function (event) {
+    path = event.target.value;
     buildTranslationsTable(receivedData);
     vscode.postMessage({
       command: 'pathSelected',
-      text: select.value
+      text: event.target.value
     })
   })
 
@@ -72,12 +73,15 @@ function main() {
   function addPathsToSelect(message: any) {
     removeSelectOptions(select);
 
+    let option = document.createElement("vscode-option");
     if(receivedData.selectedPath != undefined) {
-      let option = new Option(receivedData.selectedPath, receivedData.selectedPath, true, true);
+      option.textContent = receivedData.selectedPath;
+      option.value = receivedData.selectedPath;
       select.appendChild(option);
-      select.value = receivedData.selectedPath;
+      path = receivedData.selectedPath;
     } else {
-      let option = new Option("please select a path...", "");
+      option.textContent = "please select a path..."
+      option.value = "please select a path...";
       select.appendChild(option);
     }
     
@@ -87,7 +91,9 @@ function main() {
       let value = translationFile.path.fsPath + "/" + translationFile.name;
 
       if(text != receivedData.selectedPath) {
-        let option = new Option(text, value);
+        let option = document.createElement("vscode-option");
+        option.textContent = text;
+        option.value = text;
         select.appendChild(option);
       }
     }
@@ -167,18 +173,18 @@ function main() {
   }
 
   function createKeyInputElement(specificTranslation: any) {
-    let input = document.createElement('input');
-    input.addEventListener('input', function (e: any) {
+    let input = document.createElement('vscode-textfield');
+    input.addEventListener('keyup', function (e: any) {
       specificTranslation.key = e.target.value;
     }.bind(specificTranslation), true);
     return input;
   }
 
   function createInputElement(specificTranslation: any) {
-    let input = document.createElement('input');
+    let input = document.createElement('vscode-textfield');
     input.style.borderColor = getInputColor(specificTranslation.value);
 
-    input.addEventListener('input', function (e: any) {
+    input.addEventListener('keyup', function (e: any) {
       specificTranslation.value = e.target.value;
 
       input.style.borderColor = getInputColor(e.target.value);
@@ -214,7 +220,7 @@ function main() {
   }
 
   function getTranslationFileIndex(message: any) {
-    var key = select.value;
+    var key = path;
     for (let index in message.message) {
       let translationFile = message.message[index];
       if ((translationFile.path.fsPath + "/" + translationFile.name) === key) {
@@ -276,7 +282,7 @@ function main() {
     for (let index = 0; index < rows.length; index++) {
       const currentRow = rows[index];
       let hideElement = false;
-      if (!currentRow.querySelectorAll("input")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
+      if (!currentRow.querySelectorAll("vscode-textfield")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
         hideElement = true;
       }
       currentRow.hidden = hideElement;
@@ -292,13 +298,6 @@ function main() {
         key: key,
         specificTranslations: []
       };
-      /*for (let specificTranslation of translation.specificTranslations) {
-        let specificTranslationCopy: ISpecificTranslation = {
-          "language": specificTranslation.language,
-          "value": ""
-        };
-        translationCopy.specificTranslations.push(specificTranslationCopy);
-      }*/
       receivedData.message[index].translations.push(translationCopy);
       buildTranslationsTable(receivedData);
     }

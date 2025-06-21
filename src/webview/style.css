@@ -1,5 +1,6 @@
-vscode-dropdown {
+vscode-single-select {
   width: 100%;
+  z-index: 9999;
 }
 
 .tscroll {
@@ -14,24 +15,30 @@ vscode-dropdown {
   position: sticky;
   left: 0;
   background-color: var(--vscode-editor-background);
+  z-index: 1;
 }
 
 .tscroll table td:nth-child(2) {
   position: sticky;
   left: 0;
   background-color: var(--vscode-editor-background);
+  z-index: 1;
+  border-right: 2px solid var(--vscode-editorWidget-border);
 }
 
 .tscroll table th:first-child {
   position: sticky;
   left: 0;
   background-color: var(--vscode-editor-background);
+  z-index: 2;
 }
 
 .tscroll table th:nth-child(2) {
   position: sticky;
   left: 0;
   background-color: var(--vscode-editor-background);
+  z-index: 2;
+  border-right: 2px solid var(--vscode-editorWidget-border);
 }
 
 input {
