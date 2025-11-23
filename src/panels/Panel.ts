@@ -65,28 +65,28 @@ export class Panel {
           <link rel="stylesheet" href="${styleUri}">
           <link href="${codiconsUri}" rel="stylesheet" />
         </head>
-        <body>
+        <body class="tableview">
           <h2>Available Paths:</h2>
             <vscode-single-select id="paths" name="paths">
             </vscode-single-select>
           <hr>
           <h2>Translations:</h2>
           <vscode-button id="saveButton">Save</vscode-button>
-          <div class="tscroll">
-            <table id="table">
-              <thead>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
+          <div class="search-box">
+              <vscode-icon name="account"></vscode-icon>
+              <vscode-textfield type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-textfield>
           </div>
+          <table id="table">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          
           <div class="action-row">
             <vscode-textfield id="keyInputField" placeholder="please enter a key value">Add key:</vscode-textfield>
-            <div class="search-box">
-              <vscode-textfield type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-textfield>
-            </div>
+            <vscode-button id="addKeyButton">Add</vscode-button>
           </div>
-          <vscode-button id="addKeyButton">Add</vscode-button>
         <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
       </html>
