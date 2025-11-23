@@ -114,11 +114,8 @@ function main() {
       for (let index in languageCodes) {
         let language = languageCodes[index];
         let thead = table.getElementsByTagName('thead')[0].children[0];
-        let th = document.createElement('th');
-        th.innerHTML = language;
-        thead.append(th);
         let emptyThElement = document.createElement('th');
-        emptyThElement.innerHTML = 'Value';
+        emptyThElement.innerHTML = language;
         thead.append(emptyThElement);
       }
     }
@@ -144,7 +141,6 @@ function main() {
           let indexOfSpecificTranslation = translation.specificTranslations.map(function (e: { language: any; }) { return e.language; }).indexOf((languageCodes[i]));
           let specificTranslation = translation.specificTranslations[indexOfSpecificTranslation];
           if (specificTranslation === undefined) {
-            row.insertCell(columnCounter).innerHTML = languageCodes[i];
             let newLength = translation.specificTranslations.push({
               "language": languageCodes[i],
               "value": ""
@@ -152,9 +148,8 @@ function main() {
             );
             let input = createInputElement(translation.specificTranslations[newLength - 1]);
             translation.specificTranslations[newLength - 1].createdByResourceManager = true;
-            row.insertCell(columnCounter + 1).appendChild(input);
+            row.insertCell(columnCounter).appendChild(input);
           } else {
-            row.insertCell(columnCounter).innerHTML = specificTranslation.language;
             let input = createInputElement(specificTranslation);
             specificTranslation.createdByResourceManager = false;
             if (typeof specificTranslation.value === 'string' || specificTranslation.value instanceof String){
@@ -162,10 +157,9 @@ function main() {
             }else{
               input.value = specificTranslation.value.value[0];
             }
-            row.insertCell(columnCounter + 1).appendChild(input);
+            row.insertCell(columnCounter).appendChild(input);
 
           }
-          columnCounter++;
           columnCounter++;
         }
       }
@@ -198,11 +192,8 @@ function main() {
 
   function createRemoveButtonElement(boundTranslation: any) {
     let button = document.createElement('vscode-button') as Button;
-    button.innerText = 'X';
-    //button.appearance = 'icon'; 
-    //let span = document.createElement('span');
-    //span.className = "codicon codicon-close";
-    //button.appendChild(span);
+    button.icon = 'trash';
+    button.secondary = true;
     button.addEventListener('click', function (e: any) {
       let translationFileIndex = getTranslationFileIndex(receivedData);
       if (translationFileIndex !== undefined) {

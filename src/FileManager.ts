@@ -74,6 +74,27 @@ export class FileManager {
             }
             x.checked = true;
         }
+
+        for (const x of this.combinedFiles) {
+            x.languageCodes.sort((a: string, b: string) => {
+                // If 'a' is 'natural', it should come first (return -1)
+                if (a === 'natural') {
+                    return -1;
+                }
+                
+                // If 'b' is 'natural', it should come after 'a' (return 1)
+                // (This handles the case where 'a' is not 'natural' but 'b' is)
+                if (b === 'natural') {
+                    return 1;
+                }
+
+                // For all other strings, maintain the relative order (return 0) 
+                // or use a standard alphabetical sort if you prefer (a.localeCompare(b)).
+                // Since the rest is 'not that important', returning 0 is simple and efficient.
+                return 0;
+            });
+        }
+
         this.readResxFilesFinished(this.combinedFiles, retrieveKeyValuePairFromWorkspaceState(this.context, 'selectedPath'), this.currentPanel);
     }
 

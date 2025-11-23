@@ -4,9 +4,9 @@ vscode-single-select {
 }
 
 table {
-overflow-y: scroll;
-    display: block;
-    height: 70vh;
+  overflow-y: scroll;
+  display: block;
+  height: 70vh;
 }
 
 table td:first-child {
@@ -21,22 +21,25 @@ table td:nth-child(2) {
   left: 0;
   background-color: var(--vscode-editor-background);
   z-index: 1;
-  border-right: 2px solid var(--vscode-editorWidget-border);
+  border-right: 2px solid var(--vscode-focusBorder);
+}
+
+table th {
+  z-index: 3;
+  position: sticky;
+  top: 0;
+  background-color: var(--vscode-editor-background);
 }
 
 table th:first-child {
-  position: sticky;
   left: 0;
-  background-color: var(--vscode-editor-background);
   z-index: 2;
 }
 
 table th:nth-child(2) {
-  position: sticky;
   left: 0;
-  background-color: var(--vscode-editor-background);
   z-index: 2;
-  border-right: 2px solid var(--vscode-editorWidget-border);
+  border-right: 2px solid var(--vscode-focusBorder);
 }
 
 input {
@@ -47,19 +50,17 @@ input {
   font-size: var(--vscode-font-size);
   width: 40vh;
 }
-.action-row{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 10px;
-}
 
-.search-box{
+/* .action-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+} */
+
+.search-box {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
-}
-
-.search-box-inner{
-  width: 250px;
+  justify-content: space-between;
+  margin-bottom: 5px;
 }
