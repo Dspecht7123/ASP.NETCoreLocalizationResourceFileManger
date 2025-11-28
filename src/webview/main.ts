@@ -21,14 +21,20 @@ function main() {
 
   let path = "";
   const select = document.getElementById("paths");
-  select.addEventListener("change", function (event) {
-    path = event.target.value;
-    buildTranslationsTable(receivedData);
-    vscode.postMessage({
-      command: 'pathSelected',
-      text: event.target.value
-    })
-  })
+  if(select != null) {
+    select.addEventListener("change", function (event) {
+        
+        if(event.target !== null) {
+          path = (event.target as HTMLSelectElement).value;
+          buildTranslationsTable(receivedData);
+          vscode.postMessage({
+            command: 'pathSelected',
+            text: path
+          })
+        }
+      })
+  }
+  
 
   // Handle the message inside the webview
   let receivedData: any = {};
@@ -71,30 +77,32 @@ function main() {
   }
 
   function addPathsToSelect(message: any) {
-    removeSelectOptions(select);
+    if(select != null) {
+      removeSelectOptions(select);
 
-    let option = document.createElement("vscode-option");
-    if(receivedData.selectedPath != undefined) {
-      option.textContent = receivedData.selectedPath;
-      option.value = receivedData.selectedPath;
-      select.appendChild(option);
-      path = receivedData.selectedPath;
-    } else {
-      option.textContent = "please select a path..."
-      option.value = "please select a path...";
-      select.appendChild(option);
-    }
-    
-    for (let translationFile of message.message) {
-      console.log(translationFile.path.fsPath + "/" + translationFile.name);
-      let text = translationFile.path.fsPath + "/" + translationFile.name;
-      let value = translationFile.path.fsPath + "/" + translationFile.name;
-
-      if(text != receivedData.selectedPath) {
-        let option = document.createElement("vscode-option");
-        option.textContent = text;
-        option.value = text;
+      let option = document.createElement("vscode-option");
+      if(receivedData.selectedPath != undefined) {
+        option.textContent = receivedData.selectedPath;
+        option.value = receivedData.selectedPath;
         select.appendChild(option);
+        path = receivedData.selectedPath;
+      } else {
+        option.textContent = "please select a path..."
+        option.value = "please select a path...";
+        select.appendChild(option);
+      }
+      
+      for (let translationFile of message.message) {
+        console.log(translationFile.path.fsPath + "/" + translationFile.name);
+        let text = translationFile.path.fsPath + "/" + translationFile.name;
+        let value = translationFile.path.fsPath + "/" + translationFile.name;
+
+        if(text != receivedData.selectedPath) {
+          let option = document.createElement("vscode-option");
+          option.textContent = text;
+          option.value = text;
+          select.appendChild(option);
+        }
       }
     }
   }
@@ -168,6 +176,7 @@ function main() {
 
   function createKeyInputElement(specificTranslation: any) {
     let input = document.createElement('vscode-textfield');
+    input.classList.add("key-input-field");
     input.addEventListener('keyup', function (e: any) {
       specificTranslation.key = e.target.value;
     }.bind(specificTranslation), true);
@@ -191,7 +200,7 @@ function main() {
   }
 
   function createRemoveButtonElement(boundTranslation: any) {
-    let button = document.createElement('vscode-button') as Button;
+    let button = document.createElement('vscode-button');
     button.icon = 'trash';
     button.secondary = true;
     button.addEventListener('click', function (e: any) {
@@ -236,6 +245,15 @@ function main() {
     }
   }
 
+
+  const addKeyTextField = document.getElementById("keyInputField");
+  if(addKeyTextField !== null) {
+    addKeyTextField.addEventListener("keypress", (event) => {
+      if(event.key === "Enter") {
+        document.getElementById("addKeyButton")?.click();
+      }
+    })
+  }
   const addKeyButton = document.getElementById("addKeyButton");
   if (addKeyButton !== null) {
     addKeyButton.addEventListener("click", () => { addKey() });

@@ -3,40 +3,41 @@ vscode-single-select {
   z-index: 9999;
 }
 
-table {
+.translations-table {
   overflow-y: scroll;
   display: block;
   height: 70vh;
+  margin-top: 20px;
 }
 
-table td:first-child {
+.translations-table td:first-child {
   position: sticky;
   left: 0;
-  background-color: var(--vscode-editor-background);
+  background-color: color-mix(in srgb, var(--vscode-editor-background) 95%, black);
   z-index: 1;
 }
 
-table td:nth-child(2) {
+.translations-table td:nth-child(2) {
   position: sticky;
   left: 0;
-  background-color: var(--vscode-editor-background);
+  background-color: color-mix(in srgb, var(--vscode-editor-background) 95%, black);
   z-index: 1;
   border-right: 2px solid var(--vscode-focusBorder);
 }
 
-table th {
+.translations-table th {
   z-index: 3;
   position: sticky;
   top: 0;
-  background-color: var(--vscode-editor-background);
+  background-color: color-mix(in srgb, var(--vscode-editor-background) 95%, black);
 }
 
-table th:first-child {
+.translations-table th:first-child {
   left: 0;
   z-index: 2;
 }
 
-table th:nth-child(2) {
+.translations-table th:nth-child(2) {
   left: 0;
   z-index: 2;
   border-right: 2px solid var(--vscode-focusBorder);
@@ -51,16 +52,17 @@ input {
   width: 40vh;
 }
 
-/* .action-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 10px;
-} */
-
-.search-box {
+.tool-box {
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
+}
+
+.save-button {
+  margin-top: 5px;
+}
+
+.key-input-field {
+  width: 15vh;
 }

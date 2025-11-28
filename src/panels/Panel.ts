@@ -66,18 +66,26 @@ export class Panel {
           <link href="${codiconsUri}" rel="stylesheet" id="vscode-codicon-stylesheet"/>
         </head>
         <body class="tableview">
+          <vscode-button id="saveButton" icon="save" class="save-button">Save</vscode-button>
           <h2>Available Paths:</h2>
             <vscode-single-select id="paths" name="paths">
             </vscode-single-select>
           <hr>
           <h2>Translations:</h2>
-          <vscode-button id="saveButton" icon="save">Save</vscode-button>
-          <div class="search-box">
-            <div>
-              <vscode-textfield id="keyInputField" placeholder="please enter a key value">Add key:</vscode-textfield>
-              <vscode-button id="addKeyButton">Add</vscode-button>
-            </div>
-            <vscode-textfield type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">
+          <div class="tool-box">
+            <table>
+              <tr>
+                <td>
+                  <vscode-textfield id="keyInputField" placeholder="please enter a key value">
+                  </vscode-textfield>
+                </td>
+                <td>
+                  <vscode-button id="addKeyButton" icon="add">Add key</vscode-button>
+                </td>
+              </tr>
+            </table>
+            
+            <vscode-textfield type="text" id="searchBox" class="tool-box-inner" placeholder="please enter the searched key value">
               <vscode-icon
                 slot="content-before"
                 name="search"
@@ -86,7 +94,7 @@ export class Panel {
             </vscode-textfield>
           </div>
           
-          <table id="table">
+          <table id="table" class="translations-table">
             <thead>
             </thead>
             <tbody>
