@@ -1,6 +1,0 @@
-- DONE investigate why resx-files with additional region code don't work
-- DONE add button for adding new key (with input file to ensure that a key is entered)
-- prepare readme file for go-live
-- DONE add error-handling
-- DONE fix key column to enable scrolling
-- add Button to delete entry

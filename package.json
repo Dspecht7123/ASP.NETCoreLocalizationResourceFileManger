@@ -9,7 +9,7 @@
     "asp.net"
   ],
   "description": "Edit related resx files for different languages in one view",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.77.0"
   },

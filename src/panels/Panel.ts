@@ -76,7 +76,7 @@ export class Panel {
             <table>
               <tr>
                 <td>
-                  <vscode-textfield id="keyInputField" placeholder="please enter a key value">
+                  <vscode-textfield id="keyInputField" placeholder="please enter a translation key">
                   </vscode-textfield>
                 </td>
                 <td>
@@ -85,7 +85,7 @@ export class Panel {
               </tr>
             </table>
             
-            <vscode-textfield type="text" id="searchBox" class="tool-box-inner" placeholder="please enter the searched key value">
+            <vscode-textfield type="text" id="searchBox" class="tool-box-inner" placeholder="please enter the searched translation key">
               <vscode-icon
                 slot="content-before"
                 name="search"
@@ -94,12 +94,14 @@ export class Panel {
             </vscode-textfield>
           </div>
           
-          <table id="table" class="translations-table">
-            <thead>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+          <div class="translation-table-container">
+            <table id="table" class="translations-table">
+              <thead>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
 
         <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
