@@ -1,13 +1,15 @@
 # Resx Manager
 
-With the Resx Manager you can maintain several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view. 
+With the Resx Manager you can maintain several .resx-Files at once. It helps you to keep track of different translations by showing all of them in one view.
+
+**Feel free to open a issue if you encounter problems or miss any features.**
 
 <img src="https://raw.githubusercontent.com/Dspecht7123/ASP.NETCoreLocalizationResourceFileManger/main/ResxHelperScreenshot.png" alt="Resx Manager" width="60%"/>
 
 
 ## Features
 
-### manage resx files in one view
+### manage several resx files in one view
 To open the extension press `Strg+Shift+P` and enter `Resource Manager`.
 
 The extension searches for all files with the ending `.resx` in your repository and combines them into one data structure. 

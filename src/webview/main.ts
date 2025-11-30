@@ -1,9 +1,8 @@
-// file: src/webview/main.ts
-
-import { provideVSCodeDesignSystem, vsCodeButton, Button, vsCodeDropdown, Dropdown, vsCodeOption, Option, vsCodeTextField, TextField } from "@vscode/webview-ui-toolkit";
 import { ISpecificTranslation, ITranslation } from "../types";
-
-provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption(), vsCodeTextField());
+import "@vscode-elements/elements/dist/vscode-button/index.js";
+import "@vscode-elements/elements/dist/vscode-single-select/index.js";
+import "@vscode-elements/elements/dist/vscode-option/index.js";
+import "@vscode-elements/elements/dist/vscode-textfield/index.js";
 
 window.addEventListener("load", main);
 
@@ -20,14 +19,22 @@ function main() {
     command: 'opened'
   })
 
-  const select = document.getElementById("paths") as Dropdown;
-  select.addEventListener("change", function () {
-    buildTranslationsTable(receivedData);
-    vscode.postMessage({
-      command: 'pathSelected',
-      text: select.value
-    })
-  })
+  let path = "";
+  const select = document.getElementById("paths");
+  if(select != null) {
+    select.addEventListener("change", function (event) {
+        
+        if(event.target !== null) {
+          path = (event.target as HTMLSelectElement).value;
+          buildTranslationsTable(receivedData);
+          vscode.postMessage({
+            command: 'pathSelected',
+            text: path
+          })
+        }
+      })
+  }
+  
 
   // Handle the message inside the webview
   let receivedData: any = {};
@@ -70,25 +77,32 @@ function main() {
   }
 
   function addPathsToSelect(message: any) {
-    removeSelectOptions(select);
+    if(select != null) {
+      removeSelectOptions(select);
 
-    if(receivedData.selectedPath != undefined) {
-      let option = new Option(receivedData.selectedPath, receivedData.selectedPath, true, true);
-      select.appendChild(option);
-      select.value = receivedData.selectedPath;
-    } else {
-      let option = new Option("please select a path...", "");
-      select.appendChild(option);
-    }
-    
-    for (let translationFile of message.message) {
-      console.log(translationFile.path.fsPath + "/" + translationFile.name);
-      let text = translationFile.path.fsPath + "/" + translationFile.name;
-      let value = translationFile.path.fsPath + "/" + translationFile.name;
-
-      if(text != receivedData.selectedPath) {
-        let option = new Option(text, value);
+      let option = document.createElement("vscode-option");
+      if(receivedData.selectedPath != undefined) {
+        option.textContent = receivedData.selectedPath;
+        option.value = receivedData.selectedPath;
         select.appendChild(option);
+        path = receivedData.selectedPath;
+      } else {
+        option.textContent = "please select a path..."
+        option.value = "please select a path...";
+        select.appendChild(option);
+      }
+      
+      for (let translationFile of message.message) {
+        console.log(translationFile.path.fsPath + "/" + translationFile.name);
+        let text = translationFile.path.fsPath + "/" + translationFile.name;
+        let value = translationFile.path.fsPath + "/" + translationFile.name;
+
+        if(text != receivedData.selectedPath) {
+          let option = document.createElement("vscode-option");
+          option.textContent = text;
+          option.value = text;
+          select.appendChild(option);
+        }
       }
     }
   }
@@ -108,11 +122,8 @@ function main() {
       for (let index in languageCodes) {
         let language = languageCodes[index];
         let thead = table.getElementsByTagName('thead')[0].children[0];
-        let th = document.createElement('th');
-        th.innerHTML = language;
-        thead.append(th);
         let emptyThElement = document.createElement('th');
-        emptyThElement.innerHTML = 'Value';
+        emptyThElement.innerHTML = language;
         thead.append(emptyThElement);
       }
     }
@@ -138,7 +149,6 @@ function main() {
           let indexOfSpecificTranslation = translation.specificTranslations.map(function (e: { language: any; }) { return e.language; }).indexOf((languageCodes[i]));
           let specificTranslation = translation.specificTranslations[indexOfSpecificTranslation];
           if (specificTranslation === undefined) {
-            row.insertCell(columnCounter).innerHTML = languageCodes[i];
             let newLength = translation.specificTranslations.push({
               "language": languageCodes[i],
               "value": ""
@@ -146,9 +156,8 @@ function main() {
             );
             let input = createInputElement(translation.specificTranslations[newLength - 1]);
             translation.specificTranslations[newLength - 1].createdByResourceManager = true;
-            row.insertCell(columnCounter + 1).appendChild(input);
+            row.insertCell(columnCounter).appendChild(input);
           } else {
-            row.insertCell(columnCounter).innerHTML = specificTranslation.language;
             let input = createInputElement(specificTranslation);
             specificTranslation.createdByResourceManager = false;
             if (typeof specificTranslation.value === 'string' || specificTranslation.value instanceof String){
@@ -156,10 +165,9 @@ function main() {
             }else{
               input.value = specificTranslation.value.value[0];
             }
-            row.insertCell(columnCounter + 1).appendChild(input);
+            row.insertCell(columnCounter).appendChild(input);
 
           }
-          columnCounter++;
           columnCounter++;
         }
       }
@@ -167,18 +175,19 @@ function main() {
   }
 
   function createKeyInputElement(specificTranslation: any) {
-    let input = document.createElement('input');
-    input.addEventListener('input', function (e: any) {
+    let input = document.createElement('vscode-textfield');
+    input.classList.add("key-input-field");
+    input.addEventListener('keyup', function (e: any) {
       specificTranslation.key = e.target.value;
     }.bind(specificTranslation), true);
     return input;
   }
 
   function createInputElement(specificTranslation: any) {
-    let input = document.createElement('input');
+    let input = document.createElement('vscode-textfield');
     input.style.borderColor = getInputColor(specificTranslation.value);
 
-    input.addEventListener('input', function (e: any) {
+    input.addEventListener('keyup', function (e: any) {
       specificTranslation.value = e.target.value;
 
       input.style.borderColor = getInputColor(e.target.value);
@@ -191,12 +200,9 @@ function main() {
   }
 
   function createRemoveButtonElement(boundTranslation: any) {
-    let button = document.createElement('vscode-button') as Button;
-    button.innerText = 'X';
-    //button.appearance = 'icon'; 
-    //let span = document.createElement('span');
-    //span.className = "codicon codicon-close";
-    //button.appendChild(span);
+    let button = document.createElement('vscode-button');
+    button.icon = 'trash';
+    button.secondary = true;
     button.addEventListener('click', function (e: any) {
       let translationFileIndex = getTranslationFileIndex(receivedData);
       if (translationFileIndex !== undefined) {
@@ -214,7 +220,7 @@ function main() {
   }
 
   function getTranslationFileIndex(message: any) {
-    var key = select.value;
+    var key = path;
     for (let index in message.message) {
       let translationFile = message.message[index];
       if ((translationFile.path.fsPath + "/" + translationFile.name) === key) {
@@ -239,6 +245,15 @@ function main() {
     }
   }
 
+
+  const addKeyTextField = document.getElementById("keyInputField");
+  if(addKeyTextField !== null) {
+    addKeyTextField.addEventListener("keypress", (event) => {
+      if(event.key === "Enter") {
+        document.getElementById("addKeyButton")?.click();
+      }
+    })
+  }
   const addKeyButton = document.getElementById("addKeyButton");
   if (addKeyButton !== null) {
     addKeyButton.addEventListener("click", () => { addKey() });
@@ -276,7 +291,7 @@ function main() {
     for (let index = 0; index < rows.length; index++) {
       const currentRow = rows[index];
       let hideElement = false;
-      if (!currentRow.querySelectorAll("input")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
+      if (!currentRow.querySelectorAll("vscode-textfield")[0].value.toUpperCase().includes(e.value.toUpperCase().trim())) {
         hideElement = true;
       }
       currentRow.hidden = hideElement;
@@ -292,13 +307,6 @@ function main() {
         key: key,
         specificTranslations: []
       };
-      /*for (let specificTranslation of translation.specificTranslations) {
-        let specificTranslationCopy: ISpecificTranslation = {
-          "language": specificTranslation.language,
-          "value": ""
-        };
-        translationCopy.specificTranslations.push(specificTranslationCopy);
-      }*/
       receivedData.message[index].translations.push(translationCopy);
       buildTranslationsTable(receivedData);
     }

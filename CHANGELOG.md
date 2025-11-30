@@ -2,6 +2,9 @@
 
 All notable changes to the "resxhelper" extension will be documented in this file.
 
+## 0.3.0
+- improve UI
+
 ## 0.2.0
 - command to add single translation
 

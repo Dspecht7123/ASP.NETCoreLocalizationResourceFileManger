@@ -52,9 +52,9 @@ export class Panel {
   private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     const webviewUri = getUri(webview, extensionUri, ["out", "main.js"]);
     const styleUri = getUri(webview, extensionUri, ["out", "style.css"]);
-    const codiconsUri = getUri(webview, extensionUri, ["out", "codicon.css"]);
+		const codiconsUri = getUri(webview, extensionUri, ["out", "codicon.css"]);
     const nonce = getNonce();
-    
+
     return /*html*/ `
       <!DOCTYPE html>
       <html lang="en">
@@ -63,30 +63,46 @@ export class Panel {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}'";>
           <link rel="stylesheet" href="${styleUri}">
-          <link href="${codiconsUri}" rel="stylesheet" />
+          <link href="${codiconsUri}" rel="stylesheet" id="vscode-codicon-stylesheet"/>
         </head>
-        <body>
+        <body class="tableview">
+          <vscode-button id="saveButton" icon="save" class="save-button">Save</vscode-button>
           <h2>Available Paths:</h2>
-          <vscode-dropdown id="paths" name="paths">
-          </vscode-dropdown>
+            <vscode-single-select id="paths" name="paths">
+            </vscode-single-select>
           <hr>
           <h2>Translations:</h2>
-          <vscode-button id="saveButton">Save</vscode-button>
-          <div class="tscroll">
-            <table id="table">
+          <div class="tool-box">
+            <table>
+              <tr>
+                <td>
+                  <vscode-textfield id="keyInputField" placeholder="please enter a translation key">
+                  </vscode-textfield>
+                </td>
+                <td>
+                  <vscode-button id="addKeyButton" icon="add">Add key</vscode-button>
+                </td>
+              </tr>
+            </table>
+            
+            <vscode-textfield type="text" id="searchBox" class="tool-box-inner" placeholder="please enter the searched translation key">
+              <vscode-icon
+                slot="content-before"
+                name="search"
+                title="search"
+              ></vscode-icon>
+            </vscode-textfield>
+          </div>
+          
+          <div class="translation-table-container">
+            <table id="table" class="translations-table">
               <thead>
               </thead>
               <tbody>
               </tbody>
             </table>
           </div>
-          <div class="action-row">
-            <vscode-text-field id="keyInputField" placeholder="please enter a key value">Add key:</vscode-text-field>
-            <div class="search-box">
-              <vscode-text-field type="text" id="searchBox" class="search-box-inner" placeholder="please enter the searched key value">Key Search:</vscode-text-field>
-            </div>
-          </div>
-          <vscode-button id="addKeyButton">Add</vscode-button>
+
         <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
       </html>
